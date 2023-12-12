@@ -32,10 +32,10 @@ jobs:
           database: next
 
       - name: Run Prisma Migrate
+        env:
+          DATABASE_URL: ${{ steps.create_branch.outputs.db_url_with_pooler }}
+          DIRECT_DATABASE_URL: ${{ steps.create_branch.outputs.db_url }}
         run: |
-          touch .env
-          echo DATABASE_URL=${{ steps.create_branch.outputs.db_url_with_pooler}}/next >> .env
-          echo DIRECT_DATABASE_URL=${{ steps.create_branch.outputs.db_url}}/next >> .env
           npx prisma generate
           npx prisma migrate deploy
 
@@ -44,7 +44,10 @@ jobs:
 
       - name: Deploy Preview to Vercel
         id: deploy
-        run: echo preview_url=$(vercel deploy --prebuilt --env="DATABASE_URL=${{ env.DATABASE_URL }}" --env="DIRECT_DATABASE_URL=${{ env.DIRECT_DATABASE_URL}}" --token=${{ secrets.VERCEL_TOKEN }}) >> $GITHUB_OUTPUT
+        env:
+          DATABASE_URL: ${{ steps.create_branch.outputs.db_url_with_pooler }}
+          DIRECT_DATABASE_URL: ${{ steps.create_branch.outputs.db_url }}
+        run: echo preview_url=$(vercel deploy --prebuilt --env="DATABASE_URL=${{ env.DATABASE_URL }}" --env="DIRECT_DATABASE_URL=${{ env.DIRECT_DATABASE_URL }}" --token=${{ secrets.VERCEL_TOKEN }}) >> $GITHUB_OUTPUT
 
       - name: Comment on Pull Request
         uses: thollander/actions-comment-pull-request@v2
