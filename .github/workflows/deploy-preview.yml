@@ -38,6 +38,7 @@ jobs:
         run: |
           prisma generate
           prisma migrate deploy
+          prisma db push
 
       - name: Build Project Artifacts
         run: vercel build --token=${{ secrets.VERCEL_TOKEN }}
