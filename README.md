@@ -1,4 +1,4 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+This is a sample project highlighting how can preview environments be implemented using GitHub Actions, Neon & Vercel.
 
 ## Getting Started
 
@@ -6,18 +6,35 @@ First, run the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## Setup
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+1. Create GitHub repository
+1. Create Vercel Project
+1. Create a project in Neon
+1. Copy values `DATABASE_URL` and `DIRECT_DATABASE_URL` to ``.env.local``
+     - Run `npm run prisma migrate reset`
+1. Copy values to GitHub
+     - `DATABASE_URL`
+     - `DIRECT_DATABASE_URL`
+     - `PG_USERNAME`
+     - `PG_PASSWORD`
+     - `NEON_API_KEY`
+     - `NEON_PROJECT_ID
+     - `VERCEL_TOKEN`
+1. Copy `DATABASE_URL` and `DIRECT_DATABASE_URL` values to Vercel's environment
+1. Update Vercel > Settings > Git > Ignored build step > Don't build anything
+1. Create a branch `dev-<person>` for local development & copy values to `.env.local`
 
-When you've set all of this up, let's migrate the local database by running `npm run prisma migrate deploy`
+## Migrations
+
+```sh
+# reset the database and apply all migrations
+$ npm run prisma migrate reset
+
+# apply migrations
+$ npm run prisma migrate deploy
+```
